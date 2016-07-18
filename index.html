@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Serverless Cost Calculator</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+</head>
+
+<body id="top">
+
+	<!-- Header -->
+	<header id="header">
+		<a href="#" class="image avatar"><img src="images/avatar.jpg" alt="" /></a>
+		<h1><strong>Serverless Cost Calculator</strong><br />
+				Peter Sbarski and the <a href="https://acloud.guru">A Cloud Guru Team</a>.<br/>
+				Grab our book <a href="http://book.acloud.guru">Serverless Architectures on AWS</a>.</h1>
+	</header>
+
+	<!-- Main -->
+	<div id="main">
+		<section id="one">
+			<header class="major">
+				<h2>Serverless Cost Calculator</h2>
+			</header>
+			<div class="row">
+				<span><h4>Calculating cost for AWS Lambda, Azure Functions, Google Cloud Functions, and IBM OpenWhisk</h4></span>
+				<div class="8u 12u$(small)">
+					<form method="post" action="#">
+						<div class="row uniform 50%">
+							<div class="12u$">
+								<input type="number" name="number-executions" id="number-executions" placeholder="Number of Executions" />
+							</div>
+							<div class="12u$">
+								<input type="number" name="executed-estimation-time" id="executed-estimation-time" placeholder="Estimated Execution Time (ms)" />
+							</div>
+							<div class="12u$">
+								<select name="memory" id="memory">
+									<option value="128">128MB</option>
+									<option value="192">192MB</option>
+									<option value="256">256MB</option>
+									<option value="320">320MB</option>
+									<option value="384">384MB</option>
+									<option value="448">448MB</option>
+									<option value="512">512MB</option>
+									<option value="576">576MB</option>
+									<option value="640">640MB</option>
+									<option value="704">704MB</option>
+									<option value="768">768MB</option>
+									<option value="832">832MB</option>
+									<option value="896">896MB</option>
+									<option value="960">960MB</option>
+									<option value="1024">1024MB</option>
+									<option value="1088">1088MB</option>
+									<option value="1152">1152MB</option>
+									<option value="1216">1216MB</option>
+									<option value="1280">1280MB</option>
+									<option value="1344">1344MB</option>
+									<option value="1408">1408MB</option>
+									<option value="1472">1472MB</option>
+									<option value="1536">1536MB</option>
+								</select>
+							</div>
+							<div class="12u$">
+								<input type="radio" name="freetier" value="true" checked> <span class="label">True</span>
+								<input type="radio" name="freetier" value="false"> <span class="label">False</span>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="4u$ 12u$(small)">
+					<ul class="labeled-icons">
+						<li>
+							<h3 class="icon fa-cloud"><span class="label">Number of Executions</span></h3>
+							<a href="#">Number of Executions</a>
+						</li>
+						<li>
+							<h3 class="icon fa-code"><span class="label">Estimated Execution Time (ms)</span></h3>
+							<a href="#">Estimated Execution Time (ms)</a>
+						</li>
+						<li>
+							<h3 class="icon fa-cogs"><span class="label">Memory Size</span></h3>
+							<a href="#">Memory Size</a>
+						</li>
+						<li>
+							<h3 class="icon fa-check-circle-o"><span class="label">Memory Size</span></h3>
+							<a href="#">Include Free-Tier</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<hr/>
+			<table>
+				<tr>
+					<th>Vendor</th>
+					<th>Request Cost</th>
+					<th>Compute Cost</th>
+					<th>Total</th>
+				</tr>
+				<tr>
+					<td>AWS Lambda</td>
+					<td>$<span id="lambda-request-cost">-</span></td>
+					<td>$<span id="lambda-execution-cost">-</span></td>
+					<th>$<span id="lambda-total-cost">-</span></td>
+				</tr>
+				<tr>
+					<td>Azure Functions (Pricing TBD)</td>
+					<td>$<span id="azure-request-cost">-</span></td>
+					<td>$<span id="azure-execution-cost">-</span></td>
+					<th>$<span id="azure-total-cost">-</span></td>
+				</tr>
+				<tr>
+					<td>Google Cloud Functions (Pricing TBD)</td>
+					<td>$<span id="google-request-cost">-</span></td>
+					<td>$<span id="google-execution-cost">-</span></td>
+					<th>$<span id="google-total-cost">-</span></td>
+				</tr>
+				<tr>
+					<td>IBM OpenWhisk (Pricing TBD)</td>
+					<td>$<span id="ibm-request-cost">-</span></td>
+					<td>$<span id="ibm-execution-cost">-</span></td>
+					<th>$<span id="ibm-total-cost">-</span></td>
+				</tr>
+			</table>
+		</section>
+	</div>
+
+	<!-- Footer -->
+	<footer id="footer">
+		<ul class="icons">
+			<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+			<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+			<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+			<li><a href="#" class="icon fa-envelope-o"><span class="label">pete@acloud.guru</span></a></li>
+		</ul>
+		<ul class="copyright">
+			<li>&copy; Peter Sbarski (<a href="https://acloud.guru">A Cloud Guru</a>)</li>
+			<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+		</ul>
+	</footer>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.poptrox.min.js"></script>
+	<script src="assets/js/skel.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+	<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
