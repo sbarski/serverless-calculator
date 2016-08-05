@@ -11,6 +11,13 @@
 	<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 	<link rel="stylesheet" href="assets/css/main.css" />
 	<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+	<script src="https://teletext.io/js/latest/txt-min.js"></script>
+	<script>
+	 var options = {
+	  id: "0ba27890-6c07-405e-beb5-9f24301e1c49"
+	 };
+	 Txt.render(options);
+	</script>
 </head>
 
 <body id="top">
@@ -18,7 +25,7 @@
 	<!-- Header -->
 	<header id="header">
 		<a href="#" class="image avatar"><img src="images/avatar.jpg" alt="" /></a>
-		<h1><strong>Serverless Cost Calculator</strong><br />
+		<h1><strong data-txt="homepage.title">Serverless Cost Calculator</strong><br />
 				Peter Sbarski and the <a href="https://acloud.guru">A Cloud Guru Team</a>.<br/>
 				Grab our book <a href="http://book.acloud.guru">Serverless Architectures on AWS</a>.</h1>
 	</header>
@@ -27,52 +34,50 @@
 	<div id="main">
 		<section id="one">
 			<header class="major">
-				<h2>Serverless Cost Calculator <code>(beta)</code></h2>
+				<h2>Serverless Cost Calculator</h2>
 			</header>
 			<div class="row">
 				<span><h4>Calculating cost for AWS Lambda, Azure Functions, Google Cloud Functions, and IBM OpenWhisk</h4></span>
 				<div class="8u 12u$(small)">
-					<form method="post" action="#">
-						<div class="row uniform 50%">
-							<div class="12u$">
-								<input type="number" name="number-executions" id="number-executions" placeholder="Number of Executions" />
-							</div>
-							<div class="12u$">
-								<input type="number" name="executed-estimation-time" id="executed-estimation-time" placeholder="Estimated Execution Time (ms)" />
-							</div>
-							<div class="12u$">
-								<select name="memory" id="memory">
-									<option value="128">128MB</option>
-									<option value="192">192MB</option>
-									<option value="256">256MB</option>
-									<option value="320">320MB</option>
-									<option value="384">384MB</option>
-									<option value="448">448MB</option>
-									<option value="512">512MB</option>
-									<option value="576">576MB</option>
-									<option value="640">640MB</option>
-									<option value="704">704MB</option>
-									<option value="768">768MB</option>
-									<option value="832">832MB</option>
-									<option value="896">896MB</option>
-									<option value="960">960MB</option>
-									<option value="1024">1024MB</option>
-									<option value="1088">1088MB</option>
-									<option value="1152">1152MB</option>
-									<option value="1216">1216MB</option>
-									<option value="1280">1280MB</option>
-									<option value="1344">1344MB</option>
-									<option value="1408">1408MB</option>
-									<option value="1472">1472MB</option>
-									<option value="1536">1536MB</option>
-								</select>
-							</div>
-							<div class="12u$">
-								<input type="radio" name="freetier" value="true" checked> <span class="label">True</span>
-								<input type="radio" name="freetier" value="false"> <span class="label">False</span>
-							</div>
+					<div class="row uniform 50%">
+						<div class="12u$">
+							<input type="number" name="number-executions" id="number-executions" placeholder="Number of Executions" />
 						</div>
-					</form>
+						<div class="12u$">
+							<input type="number" name="executed-estimation-time" id="executed-estimation-time" placeholder="Estimated Execution Time (ms)" />
+						</div>
+						<div class="12u$">
+							<select name="memory" id="memory">
+								<option value="128">128MB</option>
+								<option value="192">192MB</option>
+								<option value="256">256MB</option>
+								<option value="320">320MB</option>
+								<option value="384">384MB</option>
+								<option value="448">448MB</option>
+								<option value="512">512MB</option>
+								<option value="576">576MB</option>
+								<option value="640">640MB</option>
+								<option value="704">704MB</option>
+								<option value="768">768MB</option>
+								<option value="832">832MB</option>
+								<option value="896">896MB</option>
+								<option value="960">960MB</option>
+								<option value="1024">1024MB</option>
+								<option value="1088">1088MB</option>
+								<option value="1152">1152MB</option>
+								<option value="1216">1216MB</option>
+								<option value="1280">1280MB</option>
+								<option value="1344">1344MB</option>
+								<option value="1408">1408MB</option>
+								<option value="1472">1472MB</option>
+								<option value="1536">1536MB</option>
+							</select>
+						</div>
+						<div class="12u$">
+							<input type="radio" name="freetier" value="true" checked> <span class="label">Yes</span>
+							<input type="radio" name="freetier" value="false"> <span class="label">No</span>
+						</div>
+					</div>
 				</div>
 				<div class="4u$ 12u$(small)">
 					<ul class="labeled-icons">
@@ -82,15 +87,51 @@
 						</li>
 						<li>
 							<h3 class="icon fa-code"><span class="label">Estimated Execution Time (ms)</span></h3>
-							<a href="#">Estimated Execution Time (ms)</a>
+							<a href="#">Estimated Execution Time</a>
 						</li>
 						<li>
 							<h3 class="icon fa-cogs"><span class="label">Memory Size</span></h3>
 							<a href="#">Memory Size</a>
 						</li>
 						<li>
-							<h3 class="icon fa-check-circle-o"><span class="label">Memory Size</span></h3>
+							<h3 class="icon fa-check-circle-o"><span class="label">Include Free Tier</span></h3>
 							<a href="#">Include Free-Tier</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<hr/>
+				<span><h4>API Gateway (AWS Only)</h4></span>
+				<div class="row">
+				<div class="8u 12u$(small)">
+					<div class="row uniform 50%">
+						<div class="12u$">
+							<input type="number" name="api-calls-received" id="api-calls-received" placeholder="Number of API Calls" />
+						</div>
+						<div class="12u$">
+							<input type="number" name="data-transfer-out-size" id="data-transfer-out-size" placeholder="Data Transfer Out Size (KB)" />
+						</div>
+						<div class="12u$">
+							<input type="number" name="data-transfer-out-amount" id="data-transfer-out-amount" placeholder="Amount Transfers" />
+						</div>
+						<div class="12u$">
+							<span class="label">Total: $</span><span class="label" id="apig-gateway-cost">0.00</span>
+						</div>
+					</div>
+				</div>
+				<div class="4u$ 12u$(small)">
+					<ul class="labeled-icons">
+						<li>
+							<h3 class="icon fa-cloud"><span class="label">Number of API Calls</span></h3>
+							<a href="#">Number of API Calls</a>
+						</li>
+						<li>
+							<h3 class="icon fa-cloud"><span class="label">Transfer Size (KB)</span></h3>
+							<a href="#">Transfer Size (KB)</a>
+						</li>
+						<li>
+							<h3 class="icon fa-cloud"><span class="label">Amount of Transfers</span></h3>
+							<a href="#">Amount of Transfers</a>
 						</li>
 					</ul>
 				</div>
@@ -152,14 +193,20 @@
 	<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 	<script src="assets/js/main.js"></script>
 	<script>
-	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		(function(i, s, o, g, r, a, m) {
+			i['GoogleAnalyticsObject'] = r;
+			i[r] = i[r] || function() {
+				(i[r].q = i[r].q || []).push(arguments)
+			}, i[r].l = 1 * new Date();
+			a = s.createElement(o),
+				m = s.getElementsByTagName(o)[0];
+			a.async = 1;
+			a.src = g;
+			m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-	  ga('create', 'UA-80953815-1', 'auto');
-	  ga('send', 'pageview');
-
+		ga('create', 'UA-80953815-1', 'auto');
+		ga('send', 'pageview');
 	</script>
 </body>
 

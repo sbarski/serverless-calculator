@@ -10,6 +10,13 @@
 	var lambdaRequestCharge = 0.20;
 	var lambdaFreeTier = 400000;
 	var LambdaFreeRequests = 1000000;
+	var apigCostPerMillion = 3.5;
+	var apiDataTransferOutGB = {
+		"10": "0.09",
+		"40": "0.085",
+		"100": "0.07",
+		"350": "0.05"
+	}
 
 	var settings = {
 
@@ -120,7 +127,7 @@
 
 				});
 
-			function calculcateCosts() {
+			function calculateCosts() {
 				var numberOfExecutions = $('#number-executions').val();
 				var executedEstimationTime = $('#executed-estimation-time').val();
 				var memory = $('#memory').val();
@@ -155,20 +162,51 @@
 				}
 			}
 
+			function calculateAPIGCosts() {
+				var apiCallsReceived = $('#api-calls-received').val();
+				var dataTransferOutSizeInKB = $('#data-transfer-out-size').val();
+				var dataTransferOutQuantity = $('#data-transfer-out-amount').val();
+				var total = 0;
+
+				if (parseFloat(apiCallsReceived) && parseInt(dataTransferOutSizeInKB) && parseInt(dataTransferOutQuantity)) {
+debugger;
+					var apiCost = Math.max((apiCallsReceived/1000000) * apigCostPerMillion, apigCostPerMillion);
+
+					var dataUsageInKB = dataTransferOutSizeInKB * (dataTransferOutQuantity);
+					var dataUsageInGB = dataUsageInKB / 1024 / 1024;
+					var dataCostInGB = dataUsageInGB * parseFloat(apiDataTransferOutGB["10"])
+
+					total = apiCost + dataCostInGB;
+
+				} else {
+					total = 0;
+				}
+
+				$('#apig-gateway-cost').text(parseFloat(total).toFixed(2));
+			}
+
 			$('#number-executions').on('input propertychange paste', function(result, value) {
-				calculcateCosts();
+				calculateCosts();
 			});
 
 			$('#executed-estimation-time').on('input propertychange paste', function(result, value) {
-				calculcateCosts();
+				calculateCosts();
 			});
 
 			$('#memory').on('change', function(result, value) {
-				calculcateCosts();
+				calculateCosts();
 			});
 
 			$('input[type=radio][name=freetier]').on('change', function(result, value) {
-				calculcateCosts();
+				calculateCosts();
+			});
+
+			$('#data-transfer-out-size').on('input propertychange paste', function(result, value) {
+				calculateAPIGCosts();
+			});
+
+			$('#data-transfer-out-amount').on('input propertychange paste', function(result, value) {
+				calculateAPIGCosts();
 			});
 	});
 
