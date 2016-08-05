@@ -9,7 +9,12 @@
 	var lambdaChargeGBSecond = 0.00001667;
 	var lambdaRequestCharge = 0.20;
 	var lambdaFreeTier = 400000;
-	var LambdaFreeRequests = 1000000;
+	var lambdaFreeRequests = 1000000;
+
+	var azureChargeGBSecond = 0.000008;
+	var azureRequestCharge = 0.20;
+	var azureFreeTier = 400000;
+	var azureFreeRequests = 1000000;
 
 	var settings = {
 
@@ -120,55 +125,80 @@
 
 				});
 
-			function calculcateCosts() {
-				var numberOfExecutions = $('#number-executions').val();
-				var executedEstimationTime = $('#executed-estimation-time').val();
-				var memory = $('#memory').val();
-				var includeFreeTier = $('input[type=radio][name=freetier]:checked').val();
+				function calculateCost(chargeGBSecond, requestCharge, freeTierLength, freeRequests) {
+					var result = {};
 
-				if (parseInt(numberOfExecutions) && parseInt(executedEstimationTime) && parseInt(memory)) {
+					var numberOfExecutions = $('#number-executions').val();
+					var executedEstimationTime = $('#executed-estimation-time').val();
+					var memory = $('#memory').val();
+					var includeFreeTier = $('input[type=radio][name=freetier]:checked').val();
 
-					//calculate monthly compute charge
-					var totalComputeInSeconds = numberOfExecutions * (executedEstimationTime / 1000);
-					var totalComputeGBSeconds = totalComputeInSeconds * (memory/1024);
-					var billableCompute = totalComputeGBSeconds;
+					if (parseInt(numberOfExecutions) && parseInt(executedEstimationTime) && parseInt(memory)) {
+						//round up to nearest 100ms
+						var executedEstimationTime = Math.ceil(executedEstimationTime / 100.0) * 100;
 
-					if (JSON.parse(includeFreeTier) === true) {
-						billableCompute = Math.max(totalComputeGBSeconds - lambdaFreeTier, 0);
+						//calculate monthly compute charge
+						var totalComputeInSeconds = numberOfExecutions * (executedEstimationTime / 1000);
+						var totalComputeGBSeconds = totalComputeInSeconds * (memory/1024);
+						var billableCompute = totalComputeGBSeconds;
+
+						if (JSON.parse(includeFreeTier) === true) {
+							billableCompute = Math.max(totalComputeGBSeconds - freeTierLength, 0);
+						}
+
+						//workout Lambda
+						billableCompute = billableCompute * chargeGBSecond;
+
+						result.executionCost = parseFloat(billableCompute).toFixed(2);
+
+						//calculate monthly request charge
+						var billableRequests = numberOfExecutions;
+
+						if (JSON.parse(includeFreeTier) === true) {
+							billableRequests = Math.max(billableRequests - freeRequests, 0);
+						}
+
+						billableRequests = billableRequests * (requestCharge/1000000);
+
+						result.requestCost =  parseFloat(billableRequests).toFixed(2);
+						result.totalCost = parseFloat(billableCompute + billableRequests).toFixed(2);
 					}
 
-					billableCompute = billableCompute * lambdaChargeGBSecond;
+					return result;
+				}
 
-					$('#lambda-execution-cost').text(parseFloat(billableCompute).toFixed(2));
+			function Update() {
+				var result = calculateCost(lambdaChargeGBSecond, lambdaRequestCharge, lambdaFreeTier, lambdaFreeRequests);
 
-					//calculate monthly request charge
-					var billableRequests = numberOfExecutions;
+				if (result.executionCost && result.requestCost && result.totalCost) {
+					$('#lambda-execution-cost').text(parseFloat(result.executionCost).toFixed(2));
+					$('#lambda-request-cost').text(parseFloat(result.requestCost).toFixed(2));
+					$('#lambda-total-cost').text(parseFloat(result.totalCost).toFixed(2));
+				}
 
-					if (JSON.parse(includeFreeTier) === true) {
-						billableRequests = Math.max(billableRequests - LambdaFreeRequests, 0);
-					}
+				result = calculateCost(azureChargeGBSecond, azureRequestCharge, azureFreeTier, azureFreeRequests);
 
-					billableRequests = billableRequests * (lambdaRequestCharge/1000000);
-					$('#lambda-request-cost').text(parseFloat(billableRequests).toFixed(2));
-
-					$('#lambda-total-cost').text(parseFloat(billableCompute + billableRequests).toFixed(2));
+				if (result.executionCost && result.requestCost && result.totalCost) {
+					$('#azure-execution-cost').text(parseFloat(result.executionCost).toFixed(2));
+					$('#azure-request-cost').text(parseFloat(result.requestCost).toFixed(2));
+					$('#azure-total-cost').text(parseFloat(result.totalCost).toFixed(2));
 				}
 			}
 
 			$('#number-executions').on('input propertychange paste', function(result, value) {
-				calculcateCosts();
+				Update();
 			});
 
 			$('#executed-estimation-time').on('input propertychange paste', function(result, value) {
-				calculcateCosts();
+				Update();
 			});
 
 			$('#memory').on('change', function(result, value) {
-				calculcateCosts();
+				Update();
 			});
 
 			$('input[type=radio][name=freetier]').on('change', function(result, value) {
-				calculcateCosts();
+				Update();
 			});
 	});
 
