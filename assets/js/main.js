@@ -16,6 +16,11 @@
 	var azureFreeTier = 400000;
 	var azureFreeRequests = 1000000;
 
+	var ibmChargeGBSecond = 0.000017;
+	var ibmRequestCharge = 0;
+	var ibmFreeTier = 400000;
+	var ibmFreeRequests = 0;
+
 	var settings = {
 
 		// Parallax background effect?
@@ -183,6 +188,15 @@
 					$('#azure-request-cost').text(parseFloat(result.requestCost).toFixed(2));
 					$('#azure-total-cost').text(parseFloat(result.totalCost).toFixed(2));
 				}
+
+				result = calculateCost(ibmChargeGBSecond, ibmRequestCharge, ibmFreeTier, ibmFreeRequests);
+
+				if (result.executionCost && result.requestCost && result.totalCost) {
+					$('#ibm-execution-cost').text(parseFloat(result.executionCost).toFixed(2));
+					$('#ibm-request-cost').text(parseFloat(result.requestCost).toFixed(2));
+					$('#ibm-total-cost').text(parseFloat(result.totalCost).toFixed(2));
+				}
+
 			}
 
 			$('#number-executions').on('input propertychange paste', function(result, value) {
