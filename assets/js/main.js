@@ -11,7 +11,7 @@
 	var lambdaFreeTier = 400000;
 	var lambdaFreeRequests = 1000000;
 
-	var azureChargeGBSecond = 0.000008;
+	var azureChargeGBSecond = 0.000016;
 	var azureRequestCharge = 0.20;
 	var azureFreeTier = 400000;
 	var azureFreeRequests = 1000000;
