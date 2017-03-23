@@ -16,6 +16,14 @@
 	var azureFreeTier = 400000;
 	var azureFreeRequests = 1000000;
 
+	var googleChargeGBSecond = 0.0000025;
+	var googleChargeGHzSecond = 0.0000100;
+	var googleRequestCharge = 0.40;
+	var googleGBSecondFreeTier = 400000;
+	var googleGHzSecondFreeTier = 200000;
+	var googleFreeRequests = 2000000;
+	var googleGBGHzMap = {128: 200, 256: 400, 512: 800, 1024: 1400, 2048: 2400};
+
 	var ibmChargeGBSecond = 0.000017;
 	var ibmRequestCharge = 0;
 	var ibmFreeTier = 400000;
@@ -130,7 +138,23 @@
 
 				});
 
-				function calculateCost(chargeGBSecond, requestCharge, freeTierLength, freeRequests) {
+				// Returns CPU in MHz for the specified memory using the given map
+				// If memory config not found in map, calculates CPU proportional to lower memory config
+				function getCPU(GBGHzMap) {
+					var memory = parseInt($('#memory').val());
+					var cpu = GBGHzMap[memory];
+					if (cpu == undefined) {
+						for(var key in GBGHzMap) {
+							if(key > memory)
+								break;
+							cpu = GBGHzMap[key] * (memory / key);
+						}
+						cpu = cpu || 0;
+					}
+					return cpu;
+				}
+
+				function calculateCost(chargeGBSecond, requestCharge, freeTierLength, freeRequests, cpu = 0, chargeGHzSecond = 0, freeTierLengthCPU = 0) {
 					var result = {};
 
 					var numberOfExecutions = $('#number-executions').val();
@@ -145,14 +169,17 @@
 						//calculate monthly compute charge
 						var totalComputeInSeconds = numberOfExecutions * (executedEstimationTime / 1000);
 						var totalComputeGBSeconds = totalComputeInSeconds * (memory/1024);
-						var billableCompute = totalComputeGBSeconds;
+						var totalComputeGHzSeconds = totalComputeInSeconds * (cpu / 1000);
+						var billableGBSeconds = totalComputeGBSeconds;
+						var billableGHzSeconds = totalComputeGHzSeconds;
 
 						if (JSON.parse(includeFreeTier) === true) {
-							billableCompute = Math.max(totalComputeGBSeconds - freeTierLength, 0);
+							billableGBSeconds = Math.max(totalComputeGBSeconds - freeTierLength, 0);
+							billableGHzSeconds = Math.max(totalComputeGHzSeconds - freeTierLengthCPU, 0);
 						}
 
 						//workout Lambda
-						billableCompute = billableCompute * chargeGBSecond;
+						var billableCompute = billableGBSeconds * chargeGBSecond + billableGHzSeconds * chargeGHzSecond;
 
 						result.executionCost = parseFloat(billableCompute).toFixed(2);
 
@@ -187,6 +214,15 @@
 					$('#azure-execution-cost').text(parseFloat(result.executionCost).toFixed(2));
 					$('#azure-request-cost').text(parseFloat(result.requestCost).toFixed(2));
 					$('#azure-total-cost').text(parseFloat(result.totalCost).toFixed(2));
+				}
+
+				var googleCPU = getCPU(googleGBGHzMap);
+				result = calculateCost(googleChargeGBSecond, googleRequestCharge, googleGBSecondFreeTier, googleFreeRequests, googleCPU, googleChargeGHzSecond, googleGHzSecondFreeTier);
+
+				if (result.executionCost && result.requestCost && result.totalCost) {
+					$('#google-execution-cost').text(parseFloat(result.executionCost).toFixed(2));
+					$('#google-request-cost').text(parseFloat(result.requestCost).toFixed(2));
+					$('#google-total-cost').text(parseFloat(result.totalCost).toFixed(2));
 				}
 
 				result = calculateCost(ibmChargeGBSecond, ibmRequestCharge, ibmFreeTier, ibmFreeRequests);
