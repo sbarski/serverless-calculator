@@ -10,11 +10,13 @@
 	var lambdaRequestCharge = 0.20;
 	var lambdaFreeTier = 400000;
 	var lambdaFreeRequests = 1000000;
+	var lambdaHTTPCharge = 3.50;
 
 	var azureChargeGBSecond = 0.000016;
 	var azureRequestCharge = 0.20;
 	var azureFreeTier = 400000;
 	var azureFreeRequests = 1000000;
+	var azureHTTPCharge = 0;
 
 	var googleChargeGBSecond = 0.0000025;
 	var googleChargeGHzSecond = 0.0000100;
@@ -23,11 +25,13 @@
 	var googleGHzSecondFreeTier = 200000;
 	var googleFreeRequests = 2000000;
 	var googleGBGHzMap = {128: 200, 256: 400, 512: 800, 1024: 1400, 2048: 2400};
+	var googleHTTPCharge = 0;
 
 	var ibmChargeGBSecond = 0.000017;
 	var ibmRequestCharge = 0;
 	var ibmFreeTier = 400000;
 	var ibmFreeRequests = 0;
+	var ibmHTTPCharge = 0;
 
 	var settings = {
 
@@ -154,13 +158,14 @@
 					return cpu;
 				}
 
-				function calculateCost(chargeGBSecond, requestCharge, freeTierLength, freeRequests, cpu = 0, chargeGHzSecond = 0, freeTierLengthCPU = 0) {
+				function calculateCost(chargeGBSecond, requestCharge, freeTierLength, freeRequests, httpCharge, cpu = 0, chargeGHzSecond = 0, freeTierLengthCPU = 0) {
 					var result = {};
 
 					var numberOfExecutions = $('#number-executions').val();
 					var executedEstimationTime = $('#executed-estimation-time').val();
 					var memory = $('#memory').val();
 					var includeFreeTier = $('input[type=radio][name=freetier]:checked').val();
+					var includeHTTP = $('input[type=radio][name=http]:checked').val();
 
 					if (parseInt(numberOfExecutions) && parseInt(executedEstimationTime) && parseInt(memory)) {
 						//round up to nearest 100ms
@@ -190,17 +195,21 @@
 							billableRequests = Math.max(billableRequests - freeRequests, 0);
 						}
 
-						billableRequests = billableRequests * (requestCharge/1000000);
+						var requestCost = billableRequests * (requestCharge/1000000);
 
-						result.requestCost =  parseFloat(billableRequests).toFixed(2);
-						result.totalCost = parseFloat(billableCompute + billableRequests).toFixed(2);
+						if (JSON.parse(includeHTTP) === true) {
+							requestCost = requestCost + billableRequests * (httpCharge/1000000);
+						}
+
+						result.requestCost = parseFloat(requestCost).toFixed(2);
+						result.totalCost = parseFloat(billableCompute + requestCost).toFixed(2);
 					}
 
 					return result;
 				}
 
 			function Update() {
-				var result = calculateCost(lambdaChargeGBSecond, lambdaRequestCharge, lambdaFreeTier, lambdaFreeRequests);
+				var result = calculateCost(lambdaChargeGBSecond, lambdaRequestCharge, lambdaFreeTier, lambdaFreeRequests, lambdaHTTPCharge);
 
 				if (result.executionCost && result.requestCost && result.totalCost) {
 					$('#lambda-execution-cost').text(parseFloat(result.executionCost).toFixed(2));
@@ -208,7 +217,7 @@
 					$('#lambda-total-cost').text(parseFloat(result.totalCost).toFixed(2));
 				}
 
-				result = calculateCost(azureChargeGBSecond, azureRequestCharge, azureFreeTier, azureFreeRequests);
+				result = calculateCost(azureChargeGBSecond, azureRequestCharge, azureFreeTier, azureFreeRequests, azureHTTPCharge);
 
 				if (result.executionCost && result.requestCost && result.totalCost) {
 					$('#azure-execution-cost').text(parseFloat(result.executionCost).toFixed(2));
@@ -217,7 +226,7 @@
 				}
 
 				var googleCPU = getCPU(googleGBGHzMap);
-				result = calculateCost(googleChargeGBSecond, googleRequestCharge, googleGBSecondFreeTier, googleFreeRequests, googleCPU, googleChargeGHzSecond, googleGHzSecondFreeTier);
+				result = calculateCost(googleChargeGBSecond, googleRequestCharge, googleGBSecondFreeTier, googleFreeRequests, googleHTTPCharge, googleCPU, googleChargeGHzSecond, googleGHzSecondFreeTier);
 
 				if (result.executionCost && result.requestCost && result.totalCost) {
 					$('#google-execution-cost').text(parseFloat(result.executionCost).toFixed(2));
@@ -225,7 +234,7 @@
 					$('#google-total-cost').text(parseFloat(result.totalCost).toFixed(2));
 				}
 
-				result = calculateCost(ibmChargeGBSecond, ibmRequestCharge, ibmFreeTier, ibmFreeRequests);
+				result = calculateCost(ibmChargeGBSecond, ibmRequestCharge, ibmFreeTier, ibmFreeRequests, ibmHTTPCharge);
 
 				if (result.executionCost && result.requestCost && result.totalCost) {
 					$('#ibm-execution-cost').text(parseFloat(result.executionCost).toFixed(2));
@@ -250,6 +259,10 @@
 			$('input[type=radio][name=freetier]').on('change', function(result, value) {
 				Update();
 			});
+
+			$('input[type=radio][name=http]').on('change', function(result, value) {
+				Update();
+			});			
 	});
 
 })(jQuery);
