@@ -41,7 +41,7 @@
 			</header>
 			<div class="row">
 				<span><h4>Calculating cost for AWS Lambda, Azure Functions, Google Cloud Functions, and IBM OpenWhisk</h4></span>
-				<div class="8u 12u$(small)">
+				<div class="7u 12u$(small)">
 					<form method="post" action="#">
 						<div class="row uniform 50%">
 							<div class="12u$">
@@ -81,10 +81,14 @@
 								<input type="radio" name="freetier" value="true" checked> <span class="label">True</span>
 								<input type="radio" name="freetier" value="false"> <span class="label">False</span>
 							</div>
+							<div class="12u$">
+								<input type="radio" name="http" value="true"> <span class="label">True</span>
+								<input type="radio" name="http" value="false" checked> <span class="label">False</span>
+							</div>							
 						</div>
 					</form>
 				</div>
-				<div class="4u$ 12u$(small)">
+				<div class="5u$ 12u$(small)">
 					<ul class="labeled-icons">
 						<li>
 							<h3 class="icon fa-cloud"><span class="label">Number of Executions</span></h3>
@@ -102,6 +106,10 @@
 							<h3 class="icon fa-check-circle-o"><span class="label">Memory Size</span></h3>
 							<a href="#">Include Free-Tier</a>
 						</li>
+						<li>
+							<h3 class="icon fa-globe"><span class="label">Request Type</span></h3>
+							<a href="#">HTTP Requests</a>
+						</li>						
 					</ul>
 				</div>
 			</div>
