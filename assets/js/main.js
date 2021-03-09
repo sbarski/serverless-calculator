@@ -11,6 +11,7 @@
 	var lambdaFreeTier = 400000;
 	var lambdaFreeRequests = 1000000;
 	var lambdaHTTPCharge = 3.50;
+	var lambdaBillingGranularity = 1.0;
 
 	var azureChargeGBSecond = 0.000016;
 	var azureRequestCharge = 0.20;
@@ -158,7 +159,7 @@
 					return cpu;
 				}
 
-				function calculateCost(chargeGBSecond, requestCharge, freeTierLength, freeRequests, httpCharge, cpu = 0, chargeGHzSecond = 0, freeTierLengthCPU = 0) {
+				function calculateCost(chargeGBSecond, requestCharge, freeTierLength, freeRequests, httpCharge, cpu = 0, chargeGHzSecond = 0, freeTierLengthCPU = 0, billingGranularity=100.0) {
 					var result = {};
 
 					var numberOfExecutions = $('#number-executions').val();
@@ -169,7 +170,7 @@
 
 					if (parseInt(numberOfExecutions) && parseInt(executedEstimationTime) && parseInt(memory)) {
 						//round up to nearest 100ms
-						var executedEstimationTime = Math.ceil(executedEstimationTime / 100.0) * 100;
+						var executedEstimationTime = Math.ceil(executedEstimationTime / billingGranularity) * parseInt(billingGranularity);
 
 						//calculate monthly compute charge
 						var totalComputeInSeconds = numberOfExecutions * (executedEstimationTime / 1000);
@@ -209,7 +210,7 @@
 				}
 
 			function Update() {
-				var result = calculateCost(lambdaChargeGBSecond, lambdaRequestCharge, lambdaFreeTier, lambdaFreeRequests, lambdaHTTPCharge);
+				var result = calculateCost(lambdaChargeGBSecond, lambdaRequestCharge, lambdaFreeTier, lambdaFreeRequests, lambdaHTTPCharge, 0, 0, 0, lambdaBillingGranularity);
 
 				if (result.executionCost && result.requestCost && result.totalCost) {
 					$('#lambda-execution-cost').text(parseFloat(result.executionCost).toFixed(2));
