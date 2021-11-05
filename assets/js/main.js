@@ -159,7 +159,8 @@
 					return cpu;
 				}
 
-				function calculateCost(chargeGBSecond, requestCharge, freeTierLength, freeRequests, httpCharge, cpu = 0, chargeGHzSecond = 0, freeTierLengthCPU = 0, billingGranularity=100.0) {
+				function calculateCost(chargeGBSecond, requestCharge, freeTierLength, freeRequests, httpCharge, cpu = 0, chargeGHzSecond = 0, freeTierLengthCPU = 0, billingGranularity = 100.0) {
+
 					var result = {};
 
 					var numberOfExecutions = $('#number-executions').val();
